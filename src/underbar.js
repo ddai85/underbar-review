@@ -38,10 +38,10 @@
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-      if (n > array.length){
-        return array;
-      } else{
-      return n === undefined ? array[array.length -1] : array.slice( array.length - n);
+    if (n > array.length) {
+      return array;
+    } else {
+      return n === undefined ? array[array.length - 1] : array.slice( array.length - n);
     }
   };
 
@@ -82,24 +82,42 @@
 
   // Return all elements of an array that pass a truth test.
   _.filter = function(collection, test) { 
-     var result = [];
-     _.each(collection, function(truthTest){
-        if(test(truthTest)){
-            result.push(truthTest);
-        }
+    var result = [];
+    _.each(collection, function(truthTest) {
+      if (test(truthTest)) {
+        result.push(truthTest);
+      }
 
-    })
-        return result;
+    });
+    return result;
   };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+ 
+    return _.filter(collection, function(value) {
+      return !test(value);
+    });
+    
   };
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array, isSorted, iterator) {
+    var result = [];
+    var arrObj = {};
+    for (var i = 0; i < array.length; i++) {
+      if (arrObj.hasOwnProperty(array[i])) {
+        arrObj[array[i]] = arrObj[array[i]] + 1;
+      } else {
+        arrObj[array[i]] = 1;
+      }
+    }
+    for (var key in arrObj) {
+      result.push(parseInt(key));
+    }
+    return result;
   };
 
 
