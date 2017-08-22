@@ -107,15 +107,23 @@
   _.uniq = function(array, isSorted, iterator) {
     var result = [];
     var arrObj = {};
-    for (var i = 0; i < array.length; i++) {
-      if (arrObj.hasOwnProperty(array[i])) {
-        arrObj[array[i]] = arrObj[array[i]] + 1;
-      } else {
-        arrObj[array[i]] = 1;
+    var newArr = array;
+
+    if (iterator) {
+      var temp = [];
+      for (var j = 0; j < newArr.length; j++) {
+        temp.push(iterator(newArr[j]));
+      }
+      newArr = temp;
+    }
+
+    for (var i = 0; i < newArr.length; i++) {
+      if (!arrObj.hasOwnProperty(newArr[i])) {
+        arrObj[newArr[i]] = array[i];
       }
     }
     for (var key in arrObj) {
-      result.push(parseInt(key));
+      result.push(parseInt(arrObj[key]));
     }
     return result;
   };
@@ -126,6 +134,13 @@
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    var result = [];
+    
+    _.each(collection,function(value) {
+      result.push(iterator(value));
+    });
+
+    return result;
   };
 
   /*
