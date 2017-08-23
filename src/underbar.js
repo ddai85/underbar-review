@@ -136,7 +136,7 @@
     // the members, it also maintains an array of results.
     var result = [];
     
-    _.each(collection,function(value) {
+    _.each(collection, function(value) {
       result.push(iterator(value));
     });
 
@@ -182,6 +182,42 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
+      
+    // var arrTemp = collection.slice(0);
+
+    // if (accumulator === undefined) {
+    //   accumulator = arrTemp[0];
+    //   arrTemp.shift();
+    // }
+
+    // for (var i = 0; i < arrTemp.length; i++) {
+    //   accumulator = iterator(accumulator, arrTemp[i]);
+    // }
+
+    // return accumulator;
+    if (Array.isArray(collection)){
+      var arrTemp = collection.slice(0);
+
+      if (accumulator === undefined) {
+        accumulator = arrTemp[0];
+        arrTemp.shift();
+      }
+
+      for (var i = 0; i < arrTemp.length; i++) {
+        accumulator = iterator(accumulator, arrTemp[i]);
+      }
+
+      return accumulator;
+    } else {
+      if (accumulator === undefined) {
+        accumulator = collection[0];
+      }
+
+      for (var key in collection) {
+        accumulator = iterator(accumulator, collection[key]);
+      }
+      return accumulator;      
+    }
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -200,12 +236,40 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    if (iterator === undefined) {
+      return _.reduce(collection, function(truthy, item) {
+        if (!truthy) {
+          return false;
+        }
+        if (item) {
+          return true;
+        } else {
+          return false;
+        }
+      }, true);
+    }
+    
+    return _.reduce(collection, function(truthy, item) {
+      if (!truthy) {
+        return false;
+      }
+      if (iterator(item)) {
+        return true;
+      } else {
+        return false;
+      }
+    }, true);    
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    if (_.every(collection, iterator) === false) {
+      return true;
+    } else {
+      return false;
+    }
   };
 
 
